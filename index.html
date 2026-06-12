@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iGMCRI – Procedure Record</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1f4a;
+    --royal: #1a3a8f;
+    --gold: #c9973a;
+    --cream: #f9f6f0;
+    --white: #ffffff;
+    --muted: #6b7280;
+    --border: #d1c9b8;
+    --shadow: 0 4px 32px rgba(11,31,74,0.10);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(--navy); min-height: 100vh; padding: 0 0 50px; }
+
+  /* ── HEADER ── */
+  .header-wrap { max-width: 680px; margin: 0 auto; background: #fff; border-bottom: 2.5px solid var(--royal); }
+  .header-inner { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 18px 24px 14px; gap: 3px; }
+  .header-inst { font-family: 'EB Garamond', serif; font-size: clamp(1.05rem, 4vw, 1.35rem); font-weight: 700; color: var(--royal); line-height: 1.2; text-transform: uppercase; }
+  .header-gov  { font-family: 'EB Garamond', serif; font-size: clamp(0.8rem, 3vw, 0.92rem); font-style: italic; color: var(--royal); }
+  .header-loc  { font-family: 'DM Sans', sans-serif; font-size: clamp(0.72rem, 2.5vw, 0.82rem); font-weight: 600; color: var(--royal); letter-spacing: 0.06em; text-transform: uppercase; }
+  .form-title-strip { max-width: 680px; margin: 0 auto; background: var(--navy); text-align: center; padding: 7px; font-family: 'EB Garamond', serif; font-size: 0.92rem; color: var(--gold); letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* ── FORM CARD ── */
+  .form-wrap  { max-width: 680px; margin: 20px auto 0; padding: 0 12px; }
+  .form-card  { background: var(--white); border-radius: 14px; box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+  .form-section { padding: 20px 20px; border-bottom: 1px solid var(--border); }
+
+  .section-label {
+    font-family: 'EB Garamond', serif; font-size: 0.9rem; font-weight: 700;
+    color: var(--royal); letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold) 0%, transparent 100%); }
+
+  /* ── GRID SYSTEM ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px 14px; }
+  .span2  { grid-column: span 2; }
+  .span3  { grid-column: span 3; }
+
+  /* ── FIELDS ── */
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+  .field-label .req { color: var(--gold); }
+
+  input[type="text"], input[type="number"], input[type="date"], select, textarea {
+    width: 100%; padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--navy);
+    background: var(--cream); border: 1.5px solid var(--border); border-radius: 8px;
+    outline: none; transition: border-color .2s, box-shadow .2s, background .2s; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--royal); box-shadow: 0 0 0 3px rgba(26,58,143,.10); background: var(--white); }
+  input[readonly] { background: #eef0f8; color: var(--royal); font-weight: 600; cursor: default; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231a3a8f' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; cursor: pointer;
+  }
+  textarea { resize: vertical; min-height: 68px; }
+
+  /* ── ACTIONS ── */
+  .form-actions { padding: 18px 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .btn {
+    padding: 11px 20px; border-radius: 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none;
+    transition: all .2s; display: flex; align-items: center; gap: 6px; flex: 1 1 auto; justify-content: center;
+  }
+  .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--muted); flex: 0 0 auto; }
+  .btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+  .btn-save { background: linear-gradient(135deg, #1a7a4a, #145c37); color: white; box-shadow: 0 4px 12px rgba(26,122,74,.28); }
+  .btn-save:hover { transform: translateY(-1px); }
+  .btn-copy { background: linear-gradient(135deg, var(--royal), var(--navy)); color: white; box-shadow: 0 4px 12px rgba(26,58,143,.25); }
+  .btn-copy:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(26,58,143,.35); }
+  .status-bar { margin: 0 20px 10px; padding: 10px 14px; border-radius: 8px; font-size: .85rem; font-weight: 500; display: none; align-items: center; gap: 8px; }
+  .status-bar.success { display: flex; background: rgba(26,122,74,.1); border: 1.5px solid rgba(26,122,74,.3); color: #1a7a4a; }
+  .status-bar.error   { display: flex; background: rgba(192,57,43,.08); border: 1.5px solid rgba(192,57,43,.25); color: #c0392b; }
+  .offline-note { text-align: center; font-size: .73rem; color: var(--muted); padding: 4px 20px 0; font-style: italic; }
+  .btn-wa   { background: linear-gradient(135deg, #25d366, #128c7e); color: white; box-shadow: 0 4px 12px rgba(37,211,102,.28); }
+  .btn-wa:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37,211,102,.40); }
+  .btn svg  { width: 17px; height: 17px; fill: white; flex-shrink: 0; }
+
+  /* toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--navy); color: white; padding: 10px 22px; border-radius: 24px;
+    font-size: 0.88rem; font-weight: 500; opacity: 0; pointer-events: none;
+    transition: opacity .3s; z-index: 999; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .grid-2 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .span3  { grid-column: span 2; }
+    .span2  { grid-column: span 2; }
+    .form-section { padding: 16px 14px; }
+    .form-actions { gap: 8px; }
+    .btn { font-size: 0.85rem; padding: 10px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header-wrap">
+  <div class="header-inner">
+    <div class="header-inst">Indira Gandhi Medical College &amp; Research Institute</div>
+    <div class="header-gov">(A Government of Puducherry Institution)</div>
+    <div class="header-loc">Kadirkamam, Puducherry</div>
+  </div>
+</div>
+<div class="form-title-strip">Minor Procedure Record Form</div>
+
+<div class="form-wrap">
+  <form id="pgForm" novalidate>
+    <div class="form-card">
+
+      <!-- CLINICIAN -->
+      <div class="form-section">
+        <div class="section-label">Clinician</div>
+        <div class="grid-2">
+          <div class="field">
+            <span class="field-label">PG / CRMI <span class="req">*</span></span>
+            <select id="pgName" required>
+              <option value="" disabled selected>— Select —</option>
+              <option>Dr. Mahaadevan</option>
+              <option>Dr. Thiruvengatasamy</option>
+              <option>Dr. Akshay</option>
+              <option>Dr. Porshiya</option>
+              <option>Dr. Prasanna</option>
+              <option>Dr. Juliya</option>
+              <option>Dr. Lokesh</option>
+              <option>Dr. Ameen</option>
+              <option>Dr. Harshitha</option>
+              <option>Dr. Swathika</option>
+              <option>Dr. Gayathri</option>
+              <option>Dr. Sundara Mugilan</option>
+              <option>Dr. Neha</option>
+              <option>Dr. Sai Narendiran</option>
+            </select>
+          </div>
+          <div class="field">
+            <span class="field-label">Date <span class="req">*</span></span>
+            <input type="date" id="procDate" required>
+          </div>
+          <div class="field span2">
+            <span class="field-label">Timestamp</span>
+            <input type="text" id="timestamp" readonly>
+          </div>
+        </div>
+      </div>
+
+      <!-- PATIENT -->
+      <div class="form-section">
+        <div class="section-label">Patient Details</div>
+        <div class="grid-2">
+          <div class="field span2">
+            <span class="field-label">Patient Name <span class="req">*</span></span>
+            <input type="text" id="patName" placeholder="Full name" required>
+          </div>
+          <!-- Age + Sex side by side -->
+          <div class="field">
+            <span class="field-label">Age <span class="req">*</span></span>
+            <input type="number" id="age" min="0" max="120" placeholder="Years" required>
+          </div>
+          <div class="field">
+            <span class="field-label">Sex <span class="req">*</span></span>
+            <select id="sex" required>
+              <option value="" disabled selected>— Select —</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <span class="field-label">IP / OP Number</span>
+            <input type="text" id="ipNum" placeholder="e.g. IP-2024-0012">
+          </div>
+          <!-- Ward + Unit side by side -->
+          <div class="field">
+            <span class="field-label">Ward</span>
+            <select id="ward">
+              <option value="" disabled selected>— Select —</option>
+              <option value="MSW">MSW</option>
+              <option value="FSW">FSW</option>
+            </select>
+          </div>
+          <div class="field span2">
+            <span class="field-label">Unit</span>
+            <select id="unit">
+              <option value="" disabled selected>— Select —</option>
+              <option value="Unit 1">Unit 1</option>
+              <option value="Unit 2">Unit 2</option>
+              <option value="Unit 3">Unit 3</option>
+              <option value="Unit 4">Unit 4</option>
+              <option value="Unit 5">Unit 5</option>
+              <option value="Unit 6">Unit 6</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLINICAL -->
+      <div class="form-section">
+        <div class="section-label">Clinical</div>
+        <div class="field">
+          <span class="field-label">Diagnosis <span class="req">*</span></span>
+          <input type="text" id="diagnosis" placeholder="e.g. Diabetic foot ulcer, Perianal abscess…" required>
+        </div>
+      </div>
+
+      <!-- PROCEDURE -->
+      <div class="form-section">
+        <div class="section-label">Procedure</div>
+        <div class="field" style="margin-bottom:12px">
+          <span class="field-label">Procedure Performed <span class="req">*</span></span>
+          <select id="primaryProc" required>
+            <option value="" disabled selected>— Select procedure —</option>
+            <option value="Debridement">Debridement</option>
+            <option value="C and D">Curettage &amp; Dressing (C &amp; D)</option>
+            <option value="I and D">Incision &amp; Drainage (I &amp; D)</option>
+            <option value="Suture Removal">Suture Removal</option>
+            <option value="Drain Removal">Drain Removal</option>
+            <option value="Toe Amputation">Toe Amputation</option>
+            <option value="Proctoscopic Examination">Proctoscopic Examination</option>
+            <option value="Other">Other (specify below)</option>
+          </select>
+        </div>
+        <div class="field" id="otherProcField" style="display:none">
+          <span class="field-label">Specify Procedure</span>
+          <input type="text" id="otherProc" placeholder="Describe the procedure…">
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="status-bar" id="statusBar"></div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" onclick="resetForm()">Clear</button>
+        <button type="button" class="btn btn-save" onclick="saveRecord()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;fill:white"><path d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-4-4zm-5 16a3 3 0 110-6 3 3 0 010 6zm3-10H5V5h10v4z"/></svg>
+          Save Record
+        </button>
+        <button type="button" class="btn btn-copy" onclick="copyMessage()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          Copy
+        </button>
+        <button type="button" class="btn btn-wa" onclick="sendWhatsApp()">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </button>
+      </div>
+      <p class="offline-note" id="offlineNote"></p>
+
+    </div>
+  </form>
+</div>
+
+<div class="toast" id="toast">✓ Message copied to clipboard!</div>
+
+<script>
+  // Auto date + live timestamp
+  document.getElementById('procDate').value = new Date().toISOString().split('T')[0];
+  function updateTimestamp() {
+    const now = new Date();
+    const opts = { weekday:'short', year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true };
+    document.getElementById('timestamp').value = now.toLocaleString('en-IN', opts);
+  }
+  updateTimestamp();
+  setInterval(updateTimestamp, 1000);
+
+  // Other procedure field toggle
+  document.getElementById('primaryProc').addEventListener('change', function() {
+    document.getElementById('otherProcField').style.display = (this.value === 'Other') ? 'block' : 'none';
+  });
+
+  function validate() {
+    const checks = [
+      { id: 'pgName',      label: 'PG / CRMI' },
+      { id: 'patName',     label: 'Patient Name' },
+      { id: 'age',         label: 'Age' },
+      { id: 'sex',         label: 'Sex' },
+      { id: 'diagnosis',   label: 'Diagnosis' },
+      { id: 'primaryProc', label: 'Procedure' },
+    ];
+    for (const f of checks) {
+      const el = document.getElementById(f.id);
+      if (!el.value.trim()) {
+        el.focus();
+        el.style.borderColor = '#c0392b';
+        setTimeout(() => el.style.borderColor = '', 2000);
+        alert('Please fill in: ' + f.label);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function buildMessage() {
+    const pgName   = document.getElementById('pgName').value;
+    const date     = document.getElementById('procDate').value;
+    const ts       = document.getElementById('timestamp').value;
+    const patName  = document.getElementById('patName').value.trim();
+    const age      = document.getElementById('age').value.trim();
+    const sex      = document.getElementById('sex').value;
+    const ipNum    = document.getElementById('ipNum').value.trim() || 'N/A';
+    const ward     = document.getElementById('ward').value || 'N/A';
+    const unit     = document.getElementById('unit').value || 'N/A';
+    const diag     = document.getElementById('diagnosis').value.trim();
+    const proc     = document.getElementById('primaryProc').value;
+    const other    = document.getElementById('otherProc').value.trim();
+    const procName = (proc === 'Other' && other) ? other : proc;
+
+    return `🏥 *iGMCRI – Minor Procedure Record*
+━━━━━━━━━━━━━━━━━━━
+👨‍⚕️ *PG / CRMI:* ${pgName}
+📅 *Date:* ${date}
+🕐 *Time:* ${ts}
+
+👤 *Patient:* ${patName}
+🔢 *Age / Sex:* ${age} yrs / ${sex}
+🪪 *IP/OP No:* ${ipNum}
+🏥 *Ward:* ${ward} | *Unit:* ${unit}
+
+🔬 *Diagnosis:* ${diag}
+🩺 *Procedure:* ${procName}
+━━━━━━━━━━━━━━━━━━━
+_Submitted via iGMCRI Procedure Form_`;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function copyMessage() {
+    if (!validate()) return;
+    const msg = buildMessage();
+    navigator.clipboard.writeText(msg).then(() => {
+      showToast('✓ Message copied! Paste it in the WhatsApp group.');
+    }).catch(() => {
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = msg; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('✓ Copied to clipboard!');
+    });
+  }
+
+  function sendWhatsApp() {
+    if (!validate()) return;
+    const msg = buildMessage();
+    window.open('https://wa.me/917708226474?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  function resetForm() {
+    document.getElementById('pgForm').reset();
+    document.getElementById('procDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('otherProcField').style.display = 'none';
+  }
+
+  // ── Server check ──
+  let serverOnline = false;
+  async function checkServer() {
+    try {
+      const r = await fetch('http://localhost:5000/', {signal: AbortSignal.timeout(2000)});
+      serverOnline = r.ok;
+    } catch { serverOnline = false; }
+    document.getElementById('offlineNote').textContent = serverOnline
+      ? '' : '⚠ Server offline — Save disabled. Copy & WhatsApp still work.';
+  }
+  checkServer();
+
+  // ── Build payload ──
+  function getPayload() {
+    const proc  = document.getElementById('primaryProc').value;
+    const otherEl = document.getElementById('otherProc');
+    const other = otherEl ? otherEl.value.trim() : '';
+    const sexEl = document.getElementById('sex');
+    const sexRadio = document.querySelector('input[name="sex"]:checked');
+    return {
+      pg_name:   document.getElementById('pgName').value,
+      proc_date: document.getElementById('procDate').value,
+      timestamp: document.getElementById('timestamp').value,
+      pat_name:  document.getElementById('patName').value.trim(),
+      age:       document.getElementById('age').value,
+      sex:       sexEl ? sexEl.value : (sexRadio ? sexRadio.value : ''),
+      ip_op_no:  document.getElementById('ipNum').value.trim(),
+      ward:      document.getElementById('ward').value,
+      unit:      document.getElementById('unit') ? document.getElementById('unit').value : '',
+      diagnosis: document.getElementById('diagnosis') ? document.getElementById('diagnosis').value.trim() : '',
+      procedure: proc === 'Other' && other ? other : proc,
+    };
+  }
+
+  // ── Save Record ──
+  async function saveRecord() {
+    if (!validate()) return;
+    const bar = document.getElementById('statusBar');
+    if (!serverOnline) {
+      bar.className = 'status-bar error';
+      bar.textContent = '⚠ Server not running — start server.py first.';
+      bar.style.display = 'flex';
+      setTimeout(() => bar.style.display = 'none', 3500);
+      return;
+    }
+    try {
+      const res  = await fetch('http://localhost:5000/api/procedures', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(getPayload())
+      });
+      const data = await res.json();
+      if (res.ok) {
+        bar.className = 'status-bar success';
+        bar.innerHTML = '✓ Saved successfully — Record ID #' + data.id;
+        bar.style.display = 'flex';
+        setTimeout(() => bar.style.display = 'none', 4000);
+        resetForm();
+      } else {
+        bar.className = 'status-bar error';
+        bar.textContent = 'Error: ' + (data.error || 'Unknown');
+        bar.style.display = 'flex';
+      }
+    } catch(e) {
+      bar.className = 'status-bar error';
+      bar.textContent = 'Cannot reach server. Is server.py running?';
+      bar.style.display = 'flex';
+    }
+  }
+</script>
+</body>
+</html>
